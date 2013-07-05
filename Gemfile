@@ -6,3 +6,4 @@ gemspec
 gem 'sequel'
 gem 'mysql2'
 gem 'awesome_print'
+gem 'rspec', :group => :test
