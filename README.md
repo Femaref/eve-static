@@ -1,6 +1,6 @@
 # EveStatic
 
-EveStatic is a gem designed to access the eve online static database dump, and provides conveinience methods,
+EveStatic is a gem designed to access the eve online static database dump, and provides convenience methods,
 especially for industry calculations.
 
 ## Installation
