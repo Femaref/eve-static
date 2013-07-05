@@ -84,6 +84,63 @@ module EveStatic
         
         instance[:invBlueprintTypes].where(:blueprintTypeID => typeID).select(Sequel.lit('productTypeID')).first[:productTypeID]
       end
+      
+      def materials(type, me = 0)
+        typeID = coerce_industry_type(type)
+        productTypeID = product(typeID)
+        
+        bp = blueprint(typeID)
+                
+        raw = raw_materials(productTypeID).to_a
+        
+        extra = extra_materials(typeID).to_a
+        
+        subtract = extra.select { |e| e[:recycle] }
+        
+        subtract = subtract.map do |s|
+          raw_materials(s[:requiredTypeID]).to_a
+        end
+        
+        subtract = subtract.flatten
+        raw_hash = Hash[raw.map { |r| [ r[:materialTypeID], r ] }]
+        
+        subtract.each do |s|
+          if raw_hash.keys.include? s[:materialTypeID]
+            raw_hash[s[:materialTypeID]][:quantity] -= s[:quantity]
+          end
+        end
+        
+        raw = raw_hash.values
+        raw = raw.select do |r|
+          r[:quantity] > 0
+        end       
+        
+        raw = raw.map { |r| r.merge({ :waste => waste(r[:quantity], bp[:wasteFactor], me) }) }
+                
+        { :raw => raw, 
+          :extra => extra }
+      end
+      
+      private
+      
+      def raw_materials(typeID)
+        instance[:invTypeMaterials].where( :invTypeMaterials__typeID => typeID ).select(:materialTypeID, :quantity)
+      end
+      
+      def extra_materials(typeID)
+        instance[:ramTypeRequirements].where( :typeID => typeID ).where(:activityID => 1).select(:requiredTypeID, :quantity, :damagePerJob, :recycle)
+      end
+      
+      def waste(base, base_waste, me)
+        if me >= 0
+          me = (1.0/(me + 1.0))
+        else
+          me = (1.0 - me)
+        end
+      
+        result = base * (base_waste.to_f/100.0) * me
+        result.to_i
+      end
     end
   end
 end
