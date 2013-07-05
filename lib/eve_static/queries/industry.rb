@@ -73,7 +73,10 @@ module EveStatic
       def blueprint(type)
         typeID = coerce_type_id(type)
         
-        instance[:invBlueprintTypes].where(:productTypeID => typeID).first
+        result = instance[:invBlueprintTypes].where(:productTypeID => typeID).first
+        result ||= instance[:invBlueprintTypes].where(:blueprintTypeID => typeID).first
+        
+        result
       end
       
       def product(type)
