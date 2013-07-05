@@ -1,6 +1,7 @@
 # EveStatic
 
-TODO: Write a gem description
+EveStatic is a gem designed to access the eve online static database dump, and provides conveinience methods,
+especially for industry calculations.
 
 ## Installation
 
@@ -18,7 +19,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+There is only one class at the moment, `EveStatic::Database`. It is based on the sequel gem,
+and takes the same parameters as the `Sequel.connect` method, the `:adapter` parameter defaults to 
+the `mysql2` adapter.
+
+Example:
+
+    db = EveStatic::Database.new(:user => "some_user", :database => "evestatic")
+    db.materials("Raven") # output omitted
+
+You'll need to supply the current eve static database dump yourself.
+
+Any method requiring a type works with either the `typeID` or `typeName`, and automatically coerces
+blueprint names as well (so if you supply `Raven`, it will automatically lookup `Raven Blueprint` in
+`invBlueprintTypes` for manufacture times et al).
+
+If you want to query for data yourself, the sequel database object is exposed as `instance` on the `EveStatic::Database` object.
 
 ## Contributing
 
