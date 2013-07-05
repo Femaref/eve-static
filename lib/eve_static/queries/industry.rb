@@ -116,6 +116,9 @@ module EveStatic
         end       
         
         raw = raw.map { |r| r.merge({ :waste => waste(r[:quantity], bp[:wasteFactor], me) }) }
+        
+        raw = raw.map { |r| normalize_materials r }
+        extra = extra.map { |e| normalize_materials e }
                 
         { :raw => raw, 
           :extra => extra }
@@ -140,6 +143,15 @@ module EveStatic
       
         result = base * (base_waste.to_f/100.0) * me
         result.to_i
+      end
+      
+      def normalize_materials(input)
+        output = input.map do |k, v|
+          k = :typeID if k == :materialTypeID || k == :requiredTypeID
+          [ k, v ]
+        end
+        
+        Hash[output]
       end
     end
   end
