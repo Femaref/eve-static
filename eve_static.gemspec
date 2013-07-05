@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = EveStatic::VERSION
   gem.authors       = ["Femaref"]
   gem.email         = ["femaref@googlemail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{EveStatic is a gem designed to access the eve online static database dump, and provides conveinience methods, especially for industry calculations.}
+  gem.summary       = %q{EveStatic: Library to access eve online static database}
+  gem.homepage      = "https://github.com/Femaref/eve-static"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
